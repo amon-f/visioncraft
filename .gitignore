@@ -1,0 +1,115 @@
+# ============================
+# Dependencies
+# ============================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============================
+# Build outputs
+# ============================
+dist/
+build/
+*.min.js
+*.min.css
+*.map
+.cache/
+.temp/
+.tmp/
+
+# ============================
+# Environment
+# ============================
+.env
+.env.*
+!.env.example
+
+# ============================
+# Editor
+# ============================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+
+# ============================
+# System Files
+# ============================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================
+# Logs
+# ============================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================
+# Testing
+# ============================
+coverage/
+.nyc_output/
+
+# ============================
+# Framework specific
+# ============================
+# Next.js
+.next/
+out/
+
+# Nuxt.js
+.nuxt/
+
+# Gatsby
+.cache/
+public
+
+# ============================
+# Package Managers
+# ============================
+# Yarn 2+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# pnpm
+.pnpm-store/
+
+# ============================
+# Deployment
+# ============================
+.vercel/
+.netlify/
+.firebase/
+
+# ============================
+# Misc
+# ============================
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.der
+*.srl
