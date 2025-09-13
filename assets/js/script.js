@@ -47,6 +47,7 @@ function initComponents() {
   initImpactCounters();
   initCounters();
   initAnimations();
+  initServiceModals();
   initPortfolio();
   initLeadershipCarousel();
   initScrollDownButton();
@@ -298,11 +299,405 @@ function initImpactCounters() {
 }
 
 // =========================
+// SERVICES
+// =========================
+
+// Service data - you can expand this with more services as needed
+const servicesData = {
+    'startup-branding': {
+        title: 'Startup Brand Identity',
+        image: 'assets/img/services/startup-branding.jpg',
+        description: 'Craft a unique and memorable brand identity that resonates with your target audience. Our comprehensive branding services include logo design, color palette, typography, and brand guidelines that will set your startup apart.',
+        features: [
+            'Logo & Visual Identity Design',
+            'Brand Strategy & Positioning',
+            'Brand Style Guide',
+            'Business Card & Stationery Design',
+            'Brand Voice & Messaging',
+            'Competitor Analysis'
+        ],
+        price: 'From $2,499',
+        timeline: '4-6 weeks'
+    },
+    'web-development': {
+        title: 'Web Development',
+        image: 'assets/img/services/web-development.jpg',
+        description: 'Build a powerful online presence with our custom web development services. We create fast, responsive, and user-friendly websites that drive engagement and conversions for your business.',
+        features: [
+            'Custom Website Development',
+            'E-commerce Solutions',
+            'Mobile-First Design',
+            'CMS Integration',
+            'Website Maintenance',
+            'Performance Optimization'
+        ],
+        price: 'From $3,999',
+        timeline: '6-8 weeks'
+    },
+    'digital-marketing': {
+        title: 'Digital Marketing',
+        image: 'assets/img/services/digital-marketing.jpg',
+        description: 'Reach your target audience and grow your business with our data-driven digital marketing strategies. We help you connect with customers across multiple digital channels.',
+        features: [
+            'SEO & Content Marketing',
+            'Social Media Management',
+            'PPC Advertising',
+            'Email Marketing',
+            'Analytics & Reporting',
+            'Conversion Rate Optimization'
+        ],
+        price: 'Custom Pricing',
+        timeline: 'Ongoing'
+    },
+    'video-production': {
+        title: 'Corporate Video Production',
+        image: 'assets/img/services/video-production.jpg',
+        description: 'Tell your brand\'s story through compelling video content. Our professional video production services help you engage your audience and communicate your message effectively.',
+        features: [
+            'Concept Development',
+            'Scriptwriting',
+            'Professional Videography',
+            'Motion Graphics',
+            'Video Editing',
+            'Post-Production'
+        ],
+        price: 'From $4,999',
+        timeline: '4-8 weeks'
+    },
+    'performance-marketing': {
+        title: 'Performance Marketing',
+        image: 'assets/img/services/performance-marketing.jpg',
+        description: 'Maximize your marketing ROI with our performance-driven strategies. We focus on delivering measurable results through data analysis and optimization.',
+        features: [
+            'Paid Advertising',
+            'Retargeting Campaigns',
+            'Conversion Optimization',
+            'A/B Testing',
+            'ROI Tracking',
+            'Marketing Automation'
+        ],
+        price: 'Custom Pricing',
+        timeline: 'Ongoing'
+    },
+    'global-movement': {
+        title: 'Global Movement',
+        image: 'assets/img/services/global-movement.jpg',
+        description: 'Expand your brand\'s reach with our global marketing strategies. We help you adapt your message for international audiences and navigate cultural differences.',
+        features: [
+            'International Market Research',
+            'Localization Services',
+            'Global Campaign Management',
+            'Cross-Cultural Consulting',
+            'Multilingual Content',
+            'Global SEO'
+        ],
+        price: 'Custom Pricing',
+        timeline: 'Varies by scope'
+    }
+};
+
+// Initialize service modals
+function initServiceModals() {
+    // Add click event to all service cards
+    document.querySelectorAll('.service-card').forEach(card => {
+        const serviceId = card.getAttribute('data-service');
+        if (serviceId && servicesData[serviceId]) {
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking on a link or button inside the card
+                if (e.target.tagName === 'A' || e.target.closest('a, button')) {
+                    return;
+                }
+                openServiceModal(servicesData[serviceId]);
+            });
+            
+            // Add cursor pointer to indicate clickable
+            card.style.cursor = 'pointer';
+        }
+    });
+
+    // Close modal when clicking the close button or outside the modal
+    const modal = document.getElementById('serviceModal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.classList.contains('close-modal')) {
+                closeServiceModal();
+            }
+        });
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+            closeServiceModal();
+        }
+    });
+}
+
+// Open service modal with data
+function openServiceModal(serviceData) {
+    const modal = document.getElementById('serviceModal');
+    if (!modal) return;
+
+    // Populate modal with service data
+    modal.querySelector('.modal-title').textContent = serviceData.title;
+    modal.querySelector('.modal-image').src = serviceData.image;
+    modal.querySelector('.modal-image').alt = serviceData.title;
+    modal.querySelector('.modal-description').textContent = serviceData.description;
+    
+    // Populate features
+    const featuresList = modal.querySelector('.modal-features');
+    if (featuresList) {
+        featuresList.innerHTML = serviceData.features
+            .map(feature => `<li>${feature}</li>`)
+            .join('');
+    }
+    
+    // Set price and timeline
+    modal.querySelector('.modal-price').textContent = serviceData.price;
+    modal.querySelector('.modal-timeline').textContent = serviceData.timeline;
+    
+    // Show modal
+    document.body.style.overflow = 'hidden';
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    
+    // Focus for accessibility
+    modal.focus();
+}
+
+// Close service modal
+function closeServiceModal() {
+    const modal = document.getElementById('serviceModal');
+    if (!modal) return;
+    
+    document.body.style.overflow = '';
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+// =========================
 // PORTFOLIO
 // =========================
 
 function initPortfolio() {
-  const filterButtons = document.querySelectorAll('.portfolio-filter .btn');
+  // Portfolio data
+  const portfolioData = [
+    {
+      id: 'corporate-identity',
+      title: 'Corporate Identity Design',
+      category: 'branding',
+      client: 'Nexus Enterprises',
+      year: '2023',
+      description: 'Complete brand identity overhaul including logo, color palette, typography, and brand guidelines.',
+      features: ['Logo Design', 'Brand Guidelines', 'Business Stationery', 'Social Media Kit'],
+      images: [
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+      ],
+      link: '#',
+      testimonial: 'The new design perfectly captures our vision and values.'
+    },
+    {
+      id: 'ecommerce-platform',
+      title: 'E-commerce Platform',
+      category: 'web',
+      client: 'UrbanStyle',
+      year: '2023',
+      description: 'Responsive e-commerce platform with modern UI/UX design and secure checkout.',
+      features: ['UI/UX Design', 'Mobile Development', 'Payment Integration', 'SEO Optimization'],
+      images: [
+        'https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+      ],
+      link: '#',
+      testimonial: 'Online sales increased by 150% with the new platform.'
+    },
+    {
+      id: 'digital-campaign',
+      title: 'Digital Marketing Campaign',
+      category: 'marketing',
+      client: 'GreenLife Organics',
+      year: '2023',
+      description: 'Comprehensive digital marketing campaign across multiple channels.',
+      features: ['Social Media', 'PPC Advertising', 'Email Marketing', 'Analytics'],
+      images: [
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'
+      ],
+      link: '#',
+      testimonial: '3x ROI in the first quarter with our targeted campaign.'
+    }
+  ];
+
+  // Create portfolio modal
+  function createPortfolioModal() {
+    const modal = document.createElement('div');
+    modal.className = 'portfolio-modal';
+    modal.innerHTML = `
+      <div class="portfolio-modal-content">
+        <button class="portfolio-modal-close">&times;</button>
+        <div class="portfolio-modal-body">
+          <div class="portfolio-modal-gallery">
+            <img src="" alt="Project Image" class="portfolio-modal-main-image">
+            <div class="portfolio-modal-thumbnails"></div>
+          </div>
+          <div class="portfolio-modal-details">
+            <span class="portfolio-modal-category"></span>
+            <h2 class="portfolio-modal-title"></h2>
+            <p class="portfolio-modal-description"></p>
+            
+            <div class="portfolio-modal-features">
+              <h4><i class="bi bi-check-circle"></i> Project Highlights</h4>
+              <ul></ul>
+            </div>
+            
+            <div class="portfolio-modal-meta">
+              <div class="portfolio-modal-meta-item">
+                <div class="portfolio-modal-meta-label">Client</div>
+                <div class="portfolio-modal-meta-value portfolio-client"></div>
+              </div>
+              <div class="portfolio-modal-meta-item">
+                <div class="portfolio-modal-meta-label">Year</div>
+                <div class="portfolio-modal-meta-value portfolio-year"></div>
+              </div>
+            </div>
+            
+            <div class="portfolio-modal-testimonial">
+              <p><em>"<span class="testimonial-text"></span>"</em></p>
+            </div>
+            
+            <div class="portfolio-modal-cta">
+              <a href="#" class="btn btn-primary" target="_blank">View Project</a>
+              <a href="#contact" class="btn btn-outline-primary">Start Your Project</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  // Setup event listeners
+  function setupEventListeners() {
+    // Filter buttons
+    document.querySelectorAll('.portfolio-filter .btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const filter = e.target.getAttribute('data-filter');
+        filterPortfolio(filter);
+        
+        // Update active state
+        document.querySelectorAll('.portfolio-filter .btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+      });
+    });
+
+    // Portfolio items
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('.portfolio-card');
+      if (card) {
+        const projectId = card.getAttribute('data-project');
+        const project = portfolioData.find(p => p.id === projectId);
+        if (project) {
+          openPortfolioModal(project);
+        }
+      }
+    });
+
+    // Close modal
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('portfolio-modal') || 
+          e.target.classList.contains('portfolio-modal-close')) {
+        closePortfolioModal();
+      }
+    });
+
+    // Close with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePortfolioModal();
+      }
+    });
+  }
+
+  // Filter portfolio items
+  function filterPortfolio(filter) {
+    const items = document.querySelectorAll('.portfolio-item');
+    
+    items.forEach(item => {
+      const category = item.getAttribute('data-category');
+      if (filter === 'all' || filter === category) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+
+  // Open portfolio modal
+  function openPortfolioModal(project) {
+    const modal = document.querySelector('.portfolio-modal');
+    const modalContent = modal.querySelector('.portfolio-modal-content');
+    
+    // Set project data
+    modal.querySelector('.portfolio-modal-category').textContent = project.category.charAt(0).toUpperCase() + project.category.slice(1);
+    modal.querySelector('.portfolio-modal-title').textContent = project.title;
+    modal.querySelector('.portfolio-modal-description').textContent = project.description;
+    modal.querySelector('.portfolio-client').textContent = project.client;
+    modal.querySelector('.portfolio-year').textContent = project.year;
+    modal.querySelector('.testimonial-text').textContent = project.testimonial;
+    modal.querySelector('.btn-primary').setAttribute('href', project.link);
+    
+    // Set main image
+    const mainImage = modal.querySelector('.portfolio-modal-main-image');
+    mainImage.src = project.images[0];
+    mainImage.alt = project.title;
+    
+    // Set thumbnails
+    const thumbnailsContainer = modal.querySelector('.portfolio-modal-thumbnails');
+    thumbnailsContainer.innerHTML = '';
+    
+    project.images.forEach((img, index) => {
+      const thumbnail = document.createElement('div');
+      thumbnail.className = 'portfolio-modal-thumbnail' + (index === 0 ? ' active' : '');
+      thumbnail.innerHTML = `<img src="${img}" alt="${project.title} - ${index + 1}">`;
+      
+      thumbnail.addEventListener('click', () => {
+        mainImage.src = img;
+        document.querySelectorAll('.portfolio-modal-thumbnail').forEach(t => t.classList.remove('active'));
+        thumbnail.classList.add('active');
+      });
+      
+      thumbnailsContainer.appendChild(thumbnail);
+    });
+    
+    // Set features
+    const featuresList = modal.querySelector('.portfolio-modal-features ul');
+    featuresList.innerHTML = project.features.map(feature => 
+      `<li><i class="bi bi-check"></i> ${feature}</li>`
+    ).join('');
+    
+    // Show modal
+    document.body.style.overflow = 'hidden';
+    modal.classList.add('active');
+    
+    // Focus for accessibility
+    modal.setAttribute('aria-hidden', 'false');
+    modal.querySelector('.portfolio-modal-close').focus();
+  }
+
+  // Close portfolio modal
+  function closePortfolioModal() {
+    const modal = document.querySelector('.portfolio-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // Initialize
+  createPortfolioModal();
+  setupEventListeners();
+  console.log('Portfolio initialized');
+
   const portfolioItems = document.querySelectorAll('.portfolio-item');
   const loadMoreBtn = document.querySelector('.load-more-btn');
   let visibleItems = 6; // Number of items to show initially
